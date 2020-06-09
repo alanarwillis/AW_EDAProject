@@ -1,0 +1,81 @@
+---
+title: "Testing Code EDA"
+author: "Alana Willis"
+date: "6/6/2020"
+output: html_document
+---
+## R Markdown
+
+```{r}
+#importing dataset 
+aoe2 <- read.csv("http://www.stat.cmu.edu/cmsac/sure/materials/data/eda_projects/aoe2_leaderboard_sample.csv")
+class(aoe2)
+library(tidyverse)
+```
+
+```{r}
+#Creating Total Wins by Profile ID variable
+aoe2 %>%
+  select(profile_id, wins) %>%
+  group_by(profile_id) %>%
+  summarize(total_wins = sum(wins)) %>%
+  distinct() 
+# Creating Total wins by Country variable
+aoe2 %>% 
+ group_by(country) %>%
+  summarize(wins_country = sum(wins)) %>%
+  arrange(desc(wins_country)) %>%
+  head(n = 5) %>%
+  
+#Making graph for countries by total wins
+ggplot(aes(x = country)) +
+  geom_bar(aes(y = wins_country, fill= country), stat = "identity") +
+  theme_bw() 
+
+#Average Wins by Country
+aoe2 %>%
+  group_by(country) %>%
+  summarise(avggames = mean(games), avgwins = mean(wins), avglosses = mean(losses), avgdrops = mean(drops)) %>%
+arrange(desc(avgwins)) %>%
+head(n=10)
+
+```
+
+```{r}
+#Rank
+aoe2 %>%
+  ggplot() +
+  geom_boxplot(aes(y = game_type, x = rank, fill = game_type )) 
+
+aoe2 %>%
+  ggplot(aes(x = rank, y = wins))+
+  geom_point()+
+  stat_smooth()
+```
+
+
+```{r}
+pop_countries <- aoe2 %>%
+  group_by(country) %>%
+  summarise(count = n()) %>%
+  subset(count > 100) 
+pop_countries_v <- pop_countries$country
+
+```
+
+
+
+```{r}
+#Probability of Drops by Game Type
+aoe2 %>%
+  group_by(game_type) %>%
+  summarize(count = n(),total_drops = sum(drops), prob = count / total_drops) %>%
+  distinct() %>%
+
+#Visual Display
+  ggplot(aes(x = game_type)) +
+  geom_bar(aes(y = prob, fill = game_type), stat = "identity") +
+  theme_bw() 
+
+```
+
