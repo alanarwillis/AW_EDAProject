@@ -1,5 +1,5 @@
 ---
-title: "Testing Code EDA"
+title: "EDA Project"
 author: "Alana Willis"
 date: "6/6/2020"
 output: html_document
@@ -39,18 +39,6 @@ aoe2 %>%
 arrange(desc(avgwins)) %>%
 head(n=10)
 
-```
-
-```{r}
-#Rank
-aoe2 %>%
-  ggplot() +
-  geom_boxplot(aes(y = game_type, x = rank, fill = game_type )) 
-
-aoe2 %>%
-  ggplot(aes(x = rank, y = wins))+
-  geom_point()+
-  stat_smooth()
 ```
 
 
